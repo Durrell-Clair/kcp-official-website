@@ -82,13 +82,22 @@ export default function DownloadsManagement() {
             <CardContent>
               <p className="text-muted-foreground">{error}</p>
               <p className="text-sm text-muted-foreground mt-4">
-                Pour configurer GitHub Releases, ajoutez ces variables dans votre fichier .env :
+                Pour configurer GitHub Releases, ajoutez ces variables dans Vercel (Settings → Environment Variables) :
               </p>
               <pre className="mt-2 p-4 bg-muted rounded-lg text-sm">
-                {`VITE_GITHUB_OWNER=votre-username
-VITE_GITHUB_REPO=votre-repo
-VITE_GITHUB_TOKEN=votre-token (optionnel)`}
+                {`VITE_GITHUB_OWNER=Durrell-Clair
+VITE_GITHUB_REPO=kcp-desktop-app
+VITE_GITHUB_TOKEN=votre_token_github (recommandé)`}
               </pre>
+              <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+                <p><strong>Note importante :</strong></p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>Après avoir ajouté/modifié les variables, vous devez <strong>redéployer</strong> l'application sur Vercel</li>
+                  <li>Pour obtenir un token GitHub : <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer" className="text-primary underline">github.com/settings/tokens</a></li>
+                  <li>Le token doit avoir la permission <code className="bg-muted px-1 rounded">public_repo</code> (ou <code className="bg-muted px-1 rounded">repo</code> si le repository est privé)</li>
+                  <li>Si le repository est public, le token est optionnel mais recommandé pour éviter les limites de rate</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
         </div>

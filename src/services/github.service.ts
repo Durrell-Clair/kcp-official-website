@@ -52,8 +52,10 @@ export async function getGitHubReleases(
   };
 
   // Ajouter le token si disponible (pour éviter les limites de rate)
+  // GitHub accepte à la fois "token" et "Bearer" pour les Personal Access Tokens
+  // On utilise "Bearer" qui est le format recommandé
   if (token) {
-    headers.Authorization = `token ${token}`;
+    headers.Authorization = `Bearer ${token}`;
   }
 
   const response = await fetch(
@@ -62,9 +64,18 @@ export async function getGitHubReleases(
   );
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch releases: ${response.status} ${response.statusText}`
-    );
+    // Améliorer les messages d'erreur selon le code de statut
+    let errorMessage = `Failed to fetch releases: ${response.status} ${response.statusText}`;
+    
+    if (response.status === 401) {
+      errorMessage = "Erreur d'authentification GitHub. Vérifiez que VITE_GITHUB_TOKEN est correctement configuré et a les permissions nécessaires.";
+    } else if (response.status === 403) {
+      errorMessage = "Accès refusé. Le token GitHub n'a peut-être pas les permissions nécessaires ou le repository est privé.";
+    } else if (response.status === 404) {
+      errorMessage = "Repository GitHub introuvable. Vérifiez que VITE_GITHUB_OWNER et VITE_GITHUB_REPO sont corrects.";
+    }
+    
+    throw new Error(errorMessage);
   }
 
   return response.json();
