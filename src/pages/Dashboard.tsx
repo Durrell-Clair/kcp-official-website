@@ -13,13 +13,16 @@ import {
   ExternalLink,
   Loader2,
   Users,
-  CreditCard
+  CreditCard,
+  Shield,
+  ShieldCheck
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
 import { usePlanById } from "@/hooks/usePlans";
 import { useUserPayments } from "@/hooks/usePayment";
+import { useAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { formatPrice } from "@/config/pricing";
 
@@ -28,6 +31,7 @@ const Dashboard = () => {
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
   const { plan: currentPlan, isLoading: planLoading } = usePlanById(subscription?.plan_id || null);
   const { payments, isLoading: paymentsLoading } = useUserPayments();
+  const { isAdmin, isSuperAdmin, isLoading: adminLoading } = useAdmin();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -86,7 +90,7 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  if (authLoading || dataLoading || subscriptionLoading || planLoading) {
+  if (authLoading || dataLoading || subscriptionLoading || planLoading || adminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <div className="text-center">
@@ -224,6 +228,21 @@ const Dashboard = () => {
               </div>
               <div>
                 <h2 className="font-display font-semibold">Mon compte</h2>
+                {isAdmin && (
+                  <div className="flex items-center gap-1 mt-1">
+                    {isSuperAdmin ? (
+                      <>
+                        <ShieldCheck className="w-3 h-3 text-primary" />
+                        <span className="text-xs text-primary font-medium">Super Administrateur</span>
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="w-3 h-3 text-primary" />
+                        <span className="text-xs text-primary font-medium">Administrateur</span>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -237,6 +256,18 @@ const Dashboard = () => {
                 <p className="font-medium">{user.email}</p>
               </div>
             </div>
+
+            {/* Admin Access Button */}
+            {isAdmin && (
+              <div className="mt-6 pt-6 border-t border-border">
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/admin">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Accéder à l'espace administration
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* License Key Card */}
@@ -310,6 +341,33 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+
+        {/* Admin Panel Card - Only visible to admins */}
+        {isAdmin && (
+          <div className="mt-8 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-6 lg:p-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Shield className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-display font-semibold text-xl">
+                  Espace Administration
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {isSuperAdmin 
+                    ? "Gérez les utilisateurs, abonnements, paiements et téléchargements" 
+                    : "Gérez les utilisateurs, abonnements et paiements"}
+                </p>
+              </div>
+            </div>
+            <Button variant="cta" size="lg" asChild>
+              <Link to="/admin">
+                <Shield className="w-5 h-5 mr-2" />
+                Accéder au panneau d'administration
+              </Link>
+            </Button>
+          </div>
+        )}
 
         {/* Instructions */}
         <div className="mt-8 bg-background border border-border rounded-2xl p-6 lg:p-8">
