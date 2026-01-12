@@ -18,11 +18,29 @@ Ce guide explique comment configurer les variables d'environnement pour Tranzak 
 - `VITE_SUPABASE_URL` - URL de votre projet Supabase
 - `VITE_SUPABASE_PUBLISHABLE_KEY` - Clé publique (anon key) de Supabase
 
-### Variable Application
+### Variables Application
 
 - `VITE_APP_URL` - URL de votre application (pour les redirections)
   - Développement: `http://localhost:8080`
   - Production: `https://votre-domaine.com`
+
+### Variables Super Admin (Optionnel - pour initialisation)
+
+Ces variables sont utilisées par l'Edge Function `init-super-admin` pour créer le premier administrateur :
+
+- `SUPER_ADMIN_EMAIL` - Email du super administrateur (à configurer dans Supabase Edge Functions Secrets)
+- `SUPER_ADMIN_PASSWORD` - Mot de passe du super administrateur (à configurer dans Supabase Edge Functions Secrets)
+- `SUPER_ADMIN_NAME` - Nom du super administrateur (optionnel, défaut: "Super Admin")
+
+**Note**: Ces variables doivent être configurées dans Supabase Dashboard > Edge Functions > Secrets, pas dans le fichier .env du frontend.
+
+### Variables GitHub (Optionnel - pour téléchargements)
+
+Ces variables permettent d'afficher les releases GitHub dans l'interface admin :
+
+- `VITE_GITHUB_OWNER` - Propriétaire du repository GitHub (ex: "username" ou "org")
+- `VITE_GITHUB_REPO` - Nom du repository GitHub
+- `VITE_GITHUB_TOKEN` - Token GitHub avec permissions `repo` (optionnel, mais recommandé pour éviter les limites de rate)
 
 ## 1. Développement Local
 
@@ -52,6 +70,11 @@ VITE_TRANZAK_WEBHOOK_SECRET=votre_webhook_secret
 
 # Application URL
 VITE_APP_URL=http://localhost:8080
+
+# GitHub Configuration (Optionnel - pour téléchargements)
+VITE_GITHUB_OWNER=votre-username
+VITE_GITHUB_REPO=votre-repo
+VITE_GITHUB_TOKEN=votre_github_token (optionnel)
 ```
 
 ### Étape 3: Obtenir les identifiants Tranzak
@@ -95,6 +118,9 @@ Pour chaque variable, cliquez sur **Add New** et ajoutez :
 | `VITE_TRANZAK_API_URL` | `https://dsapi.tranzak.me` (production) | Production |
 | `VITE_TRANZAK_WEBHOOK_SECRET` | Votre webhook secret | Production, Preview, Development |
 | `VITE_APP_URL` | `https://votre-domaine.com` | Production |
+| `VITE_GITHUB_OWNER` | Propriétaire du repo GitHub | Production, Preview, Development |
+| `VITE_GITHUB_REPO` | Nom du repo GitHub | Production, Preview, Development |
+| `VITE_GITHUB_TOKEN` | Token GitHub (optionnel) | Production, Preview, Development |
 
 **Important**: Pour la production, utilisez `https://dsapi.tranzak.me` (pas sandbox).
 
@@ -108,9 +134,9 @@ Après avoir ajouté les variables, redéployez votre application :
 
 Ou simplement poussez un nouveau commit, Vercel redéploiera automatiquement.
 
-## 3. Supabase Edge Functions (Webhook)
+## 3. Supabase Edge Functions
 
-Pour l'Edge Function `tranzak-webhook`, vous devez aussi configurer les variables d'environnement dans Supabase.
+Pour les Edge Functions (`tranzak-webhook` et `init-super-admin`), vous devez configurer les variables d'environnement dans Supabase.
 
 ### Étape 1: Via Supabase Dashboard
 
@@ -121,8 +147,13 @@ Pour l'Edge Function `tranzak-webhook`, vous devez aussi configurer les variable
 
 - `SUPABASE_URL` - L'URL de votre projet (déjà disponible normalement)
 - `SUPABASE_SERVICE_ROLE_KEY` - La clé service role (dans Settings > API > service_role key)
+- `SUPER_ADMIN_EMAIL` - Email du super administrateur (pour init-super-admin)
+- `SUPER_ADMIN_PASSWORD` - Mot de passe du super administrateur (pour init-super-admin)
+- `SUPER_ADMIN_NAME` - Nom du super administrateur (optionnel, pour init-super-admin)
 
-**Note**: L'Edge Function n'a pas besoin des clés Tranzak car elle reçoit les webhooks depuis Tranzak, pas l'inverse.
+**Note**: 
+- L'Edge Function `tranzak-webhook` n'a pas besoin des clés Tranzak car elle reçoit les webhooks depuis Tranzak
+- L'Edge Function `init-super-admin` permet de créer le premier super administrateur automatiquement
 
 ### Étape 2: Via CLI Supabase (Recommandé)
 
@@ -138,9 +169,37 @@ supabase link --project-ref votre-project-ref
 
 # Définir les secrets
 supabase secrets set SUPABASE_SERVICE_ROLE_KEY=votre_service_role_key
+supabase secrets set SUPER_ADMIN_EMAIL=admin@kamercash.cm
+supabase secrets set SUPER_ADMIN_PASSWORD=votre_mot_de_passe_securise
+supabase secrets set SUPER_ADMIN_NAME="Super Admin"
 ```
 
-## 4. Configuration Tranzak Dashboard
+## 4. Configuration GitHub (Optionnel)
+
+Si vous souhaitez afficher les téléchargements depuis GitHub Releases dans l'interface admin :
+
+### Étape 1: Créer un token GitHub
+
+1. Allez sur https://github.com/settings/tokens
+2. Cliquez sur **Generate new token** > **Generate new token (classic)**
+3. Donnez un nom au token (ex: "KAMER CASH PME Releases")
+4. Sélectionnez la permission `public_repo` (ou `repo` pour les repos privés)
+5. Cliquez sur **Generate token**
+6. Copiez le token (vous ne pourrez plus le voir après)
+
+### Étape 2: Configurer les variables
+
+Ajoutez les variables dans votre `.env` (développement) ou Vercel (production) :
+
+```env
+VITE_GITHUB_OWNER=votre-username
+VITE_GITHUB_REPO=votre-repo
+VITE_GITHUB_TOKEN=votre_token (optionnel mais recommandé)
+```
+
+**Note**: Le token est optionnel mais recommandé pour éviter les limites de rate de l'API GitHub (60 requêtes/heure sans authentification).
+
+## 5. Configuration Tranzak Dashboard
 
 Après avoir déployé l'Edge Function, vous devez configurer l'URL du webhook dans le dashboard Tranzak :
 
@@ -154,6 +213,27 @@ https://[votre-project-ref].supabase.co/functions/v1/tranzak-webhook
 ```
 
 Remplacez `[votre-project-ref]` par l'identifiant de votre projet Supabase (visible dans l'URL de votre projet).
+
+## 6. Initialisation du Super Admin
+
+Pour créer le premier super administrateur :
+
+### Via Supabase Dashboard
+
+1. Allez dans **Edge Functions** > **init-super-admin**
+2. Cliquez sur **Invoke**
+3. La fonction créera automatiquement le compte avec les credentials configurés dans les secrets
+
+### Via cURL
+
+```bash
+curl -X POST \
+  'https://[project-ref].supabase.co/functions/v1/init-super-admin' \
+  -H 'Authorization: Bearer [anon-key]' \
+  -H 'Content-Type: application/json'
+```
+
+**Important**: Cette fonction ne peut être exécutée qu'une seule fois pour des raisons de sécurité. Si un super admin existe déjà, elle retournera un message d'avertissement.
 
 ## Vérification
 

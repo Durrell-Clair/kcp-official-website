@@ -69,19 +69,41 @@ Vous devriez voir :
 
 ## Méthode 2 : Via Supabase CLI (Recommandé pour production)
 
-### Prérequis
+### Prérequis - Installation du CLI
 
-1. Installer Supabase CLI :
-   ```bash
-   npm install -g supabase
+**⚠️ Important** : `npm install -g supabase` ne fonctionne pas toujours. Utilisez une des méthodes suivantes :
+
+#### Option A : Windows avec Scoop (Recommandé pour Windows)
+
+1. Installer Scoop si ce n'est pas déjà fait :
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+   irm get.scoop.sh | iex
    ```
 
-2. Se connecter :
+2. Installer Supabase CLI :
+   ```powershell
+   scoop install supabase
+   ```
+
+#### Option B : Téléchargement direct (Toutes plateformes)
+
+1. Télécharger le binaire depuis [GitHub Releases](https://github.com/supabase/cli/releases)
+2. Extraire et ajouter au PATH, ou utiliser directement
+
+#### Option C : Via package manager natif
+
+- **macOS** : `brew install supabase/tap/supabase`
+- **Linux** : Suivre les instructions sur [supabase.com/docs/guides/cli](https://supabase.com/docs/guides/cli)
+
+### Configuration du CLI
+
+1. Se connecter :
    ```bash
    supabase login
    ```
 
-3. Lier le projet :
+2. Lier le projet :
    ```bash
    cd kcp-official-website
    supabase link --project-ref votre-project-ref
