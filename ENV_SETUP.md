@@ -36,11 +36,14 @@ Ces variables sont utilisées par l'Edge Function `init-super-admin` pour créer
 
 ### Variables GitHub (Optionnel - pour téléchargements)
 
-Ces variables permettent d'afficher les releases GitHub dans l'interface admin :
+Ces variables permettent d'afficher les releases GitHub dans l'interface admin et de télécharger les installateurs de l'application desktop :
 
-- `VITE_GITHUB_OWNER` - Propriétaire du repository GitHub (ex: "username" ou "org")
+- `VITE_GITHUB_OWNER` - Propriétaire du repository GitHub
+  - **Valeur pour ce projet** : `Durrell-Clair`
 - `VITE_GITHUB_REPO` - Nom du repository GitHub
+  - **Valeur pour ce projet** : `kcp-desktop-app`
 - `VITE_GITHUB_TOKEN` - Token GitHub avec permissions `repo` (optionnel, mais recommandé pour éviter les limites de rate)
+  - **Comment obtenir** : Voir la section "Obtenir un token GitHub" ci-dessous
 
 ## 1. Développement Local
 
@@ -72,9 +75,10 @@ VITE_TRANZAK_WEBHOOK_SECRET=votre_webhook_secret
 VITE_APP_URL=http://localhost:8080
 
 # GitHub Configuration (Optionnel - pour téléchargements)
-VITE_GITHUB_OWNER=votre-username
-VITE_GITHUB_REPO=votre-repo
-VITE_GITHUB_TOKEN=votre_github_token (optionnel)
+# Repository de l'application desktop Electron
+VITE_GITHUB_OWNER=Durrell-Clair
+VITE_GITHUB_REPO=kcp-desktop-app
+VITE_GITHUB_TOKEN=votre_github_token (optionnel, mais recommandé)
 ```
 
 ### Étape 3: Obtenir les identifiants Tranzak
@@ -92,6 +96,22 @@ VITE_GITHUB_TOKEN=votre_github_token (optionnel)
 3. Allez dans **Settings** > **API**
 4. Copiez l'**Project URL** (VITE_SUPABASE_URL)
 5. Copiez l'**anon public** key (VITE_SUPABASE_PUBLISHABLE_KEY)
+
+### Étape 5: Obtenir un token GitHub (Optionnel mais recommandé)
+
+Un token GitHub permet d'éviter les limites de rate de l'API GitHub et d'accéder aux releases privées si nécessaire.
+
+1. Visitez https://github.com/settings/tokens
+2. Cliquez sur **Generate new token** > **Generate new token (classic)**
+3. Donnez un nom au token (ex: "KCP Website - Releases Access")
+4. Sélectionnez les permissions suivantes :
+   - `public_repo` (pour les repositories publics)
+   - `repo` (si le repository est privé)
+5. Cliquez sur **Generate token**
+6. **Copiez le token immédiatement** (il ne sera plus visible après)
+7. Ajoutez-le dans votre fichier `.env` comme `VITE_GITHUB_TOKEN`
+
+**Note** : Le token est optionnel. Sans token, l'API GitHub fonctionne mais avec des limites de rate plus strictes (60 requêtes/heure au lieu de 5000).
 
 ### Important
 
@@ -118,9 +138,9 @@ Pour chaque variable, cliquez sur **Add New** et ajoutez :
 | `VITE_TRANZAK_API_URL` | `https://dsapi.tranzak.me` (production) | Production |
 | `VITE_TRANZAK_WEBHOOK_SECRET` | Votre webhook secret | Production, Preview, Development |
 | `VITE_APP_URL` | `https://votre-domaine.com` | Production |
-| `VITE_GITHUB_OWNER` | Propriétaire du repo GitHub | Production, Preview, Development |
-| `VITE_GITHUB_REPO` | Nom du repo GitHub | Production, Preview, Development |
-| `VITE_GITHUB_TOKEN` | Token GitHub (optionnel) | Production, Preview, Development |
+| `VITE_GITHUB_OWNER` | `Durrell-Clair` | Production, Preview, Development |
+| `VITE_GITHUB_REPO` | `kcp-desktop-app` | Production, Preview, Development |
+| `VITE_GITHUB_TOKEN` | Token GitHub (optionnel mais recommandé) | Production, Preview, Development |
 
 **Important**: Pour la production, utilisez `https://dsapi.tranzak.me` (pas sandbox).
 
