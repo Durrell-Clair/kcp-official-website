@@ -8,9 +8,11 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-                <span className="text-primary-foreground font-display font-bold text-lg">KC</span>
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="KAMER CASH PME" 
+                className="w-10 h-10 object-contain"
+              />
               <span className="font-display font-bold text-xl">
                 KAMER CASH <span className="text-primary">PME</span>
               </span>

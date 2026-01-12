@@ -19,6 +19,15 @@ CREATE POLICY "Plans are viewable by everyone"
   ON public.plans FOR SELECT
   USING (true);
 
+-- Function to update updated_at timestamp (create if not exists)
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SET search_path = public;
+
 -- Function to update updated_at timestamp
 CREATE TRIGGER update_plans_updated_at
   BEFORE UPDATE ON public.plans

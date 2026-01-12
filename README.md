@@ -1,73 +1,163 @@
-# Welcome to your Lovable project
+# KAMER CASH PME - Site Officiel
 
-## Project info
+Site web officiel pour KAMER CASH PME, le logiciel de gestion financière conçu pour les PME et commerçants camerounais.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🎯 Description
 
-## How can I edit this code?
+KAMER CASH PME est une plateforme web permettant aux PME camerounaises de s'abonner à un logiciel de gestion financière. Le site permet aux utilisateurs de :
 
-There are several ways of editing your application.
+- Créer un compte
+- Choisir parmi 3 plans d'abonnement mensuel (START, PLUS, PRO)
+- Payer via Mobile Money (MTN MoMo, Orange Money) via l'API Tranzak
+- Gérer leur abonnement et consulter leur historique de paiements
 
-**Use Lovable**
+## 🛠️ Technologies
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Ce projet utilise :
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend** :
+  - [Vite](https://vitejs.dev/) - Build tool et dev server
+  - [React](https://react.dev/) - Bibliothèque UI
+  - [TypeScript](https://www.typescriptlang.org/) - Typage statique
+  - [React Router](https://reactrouter.com/) - Routing
+  - [shadcn/ui](https://ui.shadcn.com/) - Composants UI
+  - [Tailwind CSS](https://tailwindcss.com/) - Styling
 
-**Use your preferred IDE**
+- **Backend** :
+  - [Supabase](https://supabase.com/) - Base de données PostgreSQL, authentification, Edge Functions
+  - [Tranzak API](https://developer.tranzak.me/) - Paiements Mobile Money
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Déploiement** :
+  - [Vercel](https://vercel.com/) - Hosting et déploiement
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📋 Prérequis
 
-Follow these steps:
+- Node.js 18+ et npm (ou yarn, pnpm)
+- Un compte Supabase
+- Un compte Tranzak Developer (pour les paiements)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🚀 Démarrage rapide
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 1. Installation des dépendances
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 2. Configuration des variables d'environnement
+
+Créez un fichier `.env` à la racine du projet avec les variables suivantes :
+
+```env
+VITE_SUPABASE_URL=votre_url_supabase
+VITE_SUPABASE_PUBLISHABLE_KEY=votre_cle_supabase
+VITE_TRANZAK_APP_ID=votre_app_id
+VITE_TRANZAK_APP_KEY=votre_app_key
+VITE_TRANZAK_API_URL=https://sandbox.dsapi.tranzak.me
+VITE_TRANZAK_WEBHOOK_SECRET=votre_webhook_secret
+VITE_APP_URL=http://localhost:8080
+```
+
+Pour plus de détails, consultez [`ENV_SETUP.md`](./ENV_SETUP.md).
+
+### 3. Configuration de la base de données
+
+Appliquez les migrations Supabase pour créer les tables nécessaires. Consultez [`SUPABASE_MIGRATIONS.md`](./SUPABASE_MIGRATIONS.md) pour les instructions détaillées.
+
+### 4. Lancer le serveur de développement
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Le site sera accessible sur `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📚 Documentation
 
-**Use GitHub Codespaces**
+- [`ENV_SETUP.md`](./ENV_SETUP.md) - Configuration des variables d'environnement
+- [`QUICK_START.md`](./QUICK_START.md) - Guide de démarrage rapide
+- [`SUPABASE_MIGRATIONS.md`](./SUPABASE_MIGRATIONS.md) - Application des migrations Supabase
+- [`TESTING_GUIDE.md`](./TESTING_GUIDE.md) - Guide de test local
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🏗️ Structure du projet
 
-## What technologies are used for this project?
+```
+kcp-official-website/
+├── public/              # Assets statiques (logo, favicon)
+├── src/
+│   ├── components/      # Composants React réutilisables
+│   │   ├── layout/     # Header, Footer
+│   │   ├── landing/    # Sections de la page d'accueil
+│   │   ├── pricing/    # Composants de tarification
+│   │   ├── payment/    # Composants de paiement
+│   │   └── ui/         # Composants shadcn/ui
+│   ├── config/         # Configuration (pricing, tranzak)
+│   ├── contexts/       # Contextes React (Auth)
+│   ├── hooks/          # Hooks personnalisés
+│   ├── integrations/    # Intégrations (Supabase)
+│   ├── pages/          # Pages de l'application
+│   ├── services/       # Services API
+│   └── main.tsx        # Point d'entrée
+├── supabase/
+│   ├── functions/      # Edge Functions (webhooks)
+│   └── migrations/    # Migrations SQL
+└── vercel.json         # Configuration Vercel
+```
 
-This project is built with:
+## 🚢 Déploiement
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Déploiement sur Vercel
 
-## How can I deploy this project?
+1. **Connecter le projet** :
+   - Allez sur [vercel.com](https://vercel.com)
+   - Importez votre dépôt Git
+   - Sélectionnez le dossier `kcp-official-website`
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+2. **Configuration** :
+   - Framework Preset: Vite (détecté automatiquement)
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
 
-## Can I connect a custom domain to my Lovable project?
+3. **Variables d'environnement** :
+   - Ajoutez toutes les variables du `.env` dans Vercel Dashboard
+   - **Important** : Pour la production, utilisez `https://dsapi.tranzak.me` (pas sandbox)
 
-Yes, you can!
+4. **Déployer** :
+   - Vercel déploiera automatiquement à chaque push sur la branche principale
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Pour plus de détails, consultez [`QUICK_START.md`](./QUICK_START.md).
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 🔧 Scripts disponibles
+
+- `npm run dev` - Lance le serveur de développement
+- `npm run build` - Build de production
+- `npm run preview` - Prévisualise le build de production
+- `npm run lint` - Vérifie le code avec ESLint
+
+## 📝 Plans d'abonnement
+
+Le site propose 3 plans d'abonnement mensuel :
+
+- **PME START** : 10,000 FCFA/mois - 3 utilisateurs
+- **PME PLUS** : 20,000 FCFA/mois - 10 utilisateurs
+- **PME PRO** : 35,000 FCFA/mois - 20 utilisateurs
+
+Les plans sont stockés dans la table `public.plans` de Supabase.
+
+## 🔐 Sécurité
+
+- Les variables d'environnement sensibles ne doivent jamais être commitées
+- Le fichier `.env` est dans `.gitignore`
+- Les clés API doivent être différentes entre développement et production
+- Les webhooks Tranzak sont vérifiés avec un secret partagé
+
+## 📞 Support
+
+Pour toute question ou problème :
+
+- Email : support@kamercash.cm
+- Site : https://www.kamer-cash-pme.com
+
+## 📄 Licence
+
+© 2025 KAMER CASH PME. Tous droits réservés.

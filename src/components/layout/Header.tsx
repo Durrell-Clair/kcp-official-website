@@ -12,9 +12,11 @@ const Header = () => {
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-primary-foreground font-display font-bold text-lg">KC</span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="KAMER CASH PME" 
+              className="w-10 h-10 object-contain"
+            />
             <span className="font-display font-bold text-xl text-foreground hidden sm:block">
               KAMER CASH <span className="text-primary">PME</span>
             </span>

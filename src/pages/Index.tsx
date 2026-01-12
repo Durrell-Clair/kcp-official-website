@@ -4,7 +4,6 @@ import HeroSection from "@/components/landing/HeroSection";
 import ProblemSection from "@/components/landing/ProblemSection";
 import SolutionSection from "@/components/landing/SolutionSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
-import PricingPreview from "@/components/landing/PricingPreview";
 import CTASection from "@/components/landing/CTASection";
 
 const Index = () => {
@@ -16,7 +15,6 @@ const Index = () => {
         <ProblemSection />
         <SolutionSection />
         <FeaturesSection />
-        <PricingPreview />
         <CTASection />
       </main>
       <Footer />
